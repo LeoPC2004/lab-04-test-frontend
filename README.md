@@ -1,88 +1,85 @@
-# Laboratorio 04: Pruebas Unitarias con Jest en React
+# Lab 04 - Testing con Jest 🧪
 
-Este laboratorio tiene como objetivo proporcionar una introducción práctica a las pruebas unitarias en aplicaciones React utilizando Jest y React Testing Library.
+Este repositorio contiene las pruebas unitarias desarrolladas con **Jest y Testing Library** para el proyecto **Proveedify**, como parte del curso **Ingeniería de Software II (2025-1)**.
 
-## Aplicación Todo List
+## 👤 Autor
 
-La aplicación desarrollada es una lista de tareas (Todo List) con las siguientes funcionalidades:
+- Leonardo Miguel Pachas Cleonares
 
-- Añadir nuevas tareas
-- Marcar tareas como completadas
-- Eliminar tareas
-- Filtrar tareas por estado (todas, activas, completadas)
-- Ver estadísticas de tareas
-- Borrar todas las tareas completadas
+---
 
-## Estructura del Proyecto
+## 📌 Historia de Usuario (Sprint 2)
 
-```
-app/
-├── components/
-│   ├── Todo.tsx               # Componente principal que integra todos los demás
-│   ├── TodoForm.tsx           # Formulario para añadir nuevas tareas
-│   ├── TodoItem.tsx           # Componente individual para cada tarea
-│   ├── TodoList.tsx           # Lista de tareas
-│   ├── TodoFilter.tsx         # Filtros para las tareas
-│   ├── TodoStats.tsx          # Estadísticas de tareas
-│   └── __tests__/             # Directorio de pruebas
-│       ├── TodoItem.test.tsx  # Pruebas para TodoItem
-│       ├── TodoForm.test.tsx  # Pruebas para TodoForm
-│       └── TodoList.test.tsx  # Pruebas para TodoList
-├── page.tsx                   # Página principal
-└── layout.tsx                 # Layout de la aplicación
-```
+**HU:** Como usuario del sistema, quiero registrar gastos compartidos y recibir notificaciones cuando se haya realizado el pago correspondiente por parte de otros usuarios.
 
-## Instrucciones del Laboratorio
+### ✅ Tareas completadas
 
-En este laboratorio, exploraremos cómo escribir pruebas unitarias efectivas siguiendo el patrón **Prepare, Execute and Validate**:
+| ID_TAREA | Tarea                                       | Rol       | Descripción técnica |
+|----------|---------------------------------------------|-----------|---------------------|
+| TA015    | Crear formulario de registro de gastos      | Frontend  | Permitir a los usuarios registrar un gasto compartido ingresando el monto, la descripción y los participantes. |
+| TA016    | Crear lógica de notificación de pagos       | Frontend  | Implementar el envío de notificaciones cuando un usuario marque un gasto como pagado. |
+| TA017    | Mostrar notificaciones de pagos             | Frontend  | Diseñar la vista de notificaciones para que los usuarios puedan visualizar los pagos realizados. |
 
-1. **Prepare**: Configurar el entorno de prueba y los datos necesarios
-2. **Execute**: Realizar la acción que queremos probar
-3. **Validate**: Verificar que el resultado es el esperado
+---
 
-### Ejercicios
+## ✅ Escenarios de prueba – HU: Registrar gastos compartidos / Notificar pagos
 
-#### Ejercicio 1: Completar prueba de TodoItem
+### 🟢 Happy Paths
 
-Completa el test para verificar que el componente `TodoItem` muestra correctamente el texto de una tarea con caracteres especiales.
+**Se muestra correctamente el formulario de gastos**  
+- **Precondición**: El usuario ha iniciado sesión correctamente.  
+- **Acción**: Navega a la sección “Gastos compartidos” y selecciona “Registrar gasto”.  
+- **Resultado esperado**: Se visualiza un formulario con campos: descripción, monto y participantes.
 
-Archivo: `app/components/__tests__/TodoItem.test.tsx`
+**Se permite ingresar información válida en todos los campos**  
+- **Acción**: El usuario completa los campos con datos válidos.  
+- **Resultado esperado**: El formulario refleja los datos ingresados correctamente y el botón "Registrar" se habilita.
 
-#### Ejercicio 2: Completar prueba de TodoForm
+**El gasto se registra exitosamente**  
+- **Acción**: Se presiona el botón “Registrar”.  
+- **Resultado esperado**:  
+  - Se realiza una petición POST al endpoint correspondiente.  
+  - Se muestra un mensaje de confirmación: “Gasto registrado correctamente”.
 
-Completa el test para verificar que el componente `TodoForm` maneja correctamente la entrada de texto con espacios al inicio o final.
+**Se genera y muestra una notificación de pago**  
+- **Acción**: Un usuario marca un gasto como pagado.  
+- **Resultado esperado**:  
+  - Se muestra una notificación visual indicando el pago.  
+  - Los demás usuarios visualizan la notificación en la bandeja.
 
-Archivo: `app/components/__tests__/TodoForm.test.tsx`
+---
 
-#### Ejercicio 3: Completar prueba de TodoList
+### 🔴 Unhappy Paths
 
-Completa el test para verificar que el componente `TodoList` pasa correctamente las funciones onToggle y onDelete a cada TodoItem.
+**Intento de registro con campos vacíos o inválidos**  
+- **Acción**: El usuario intenta registrar sin completar todos los campos o ingresa valores inválidos.  
+- **Resultado esperado**:  
+  - El envío se bloquea.  
+  - Se muestran mensajes de error: “Campo obligatorio” o “Ingrese un monto válido”.
 
-Archivo: `app/components/__tests__/TodoList.test.tsx`
+**Descripción vacía o solo espacios**  
+- **Acción**: Se ingresa `"   "` como descripción.  
+- **Resultado esperado**:  
+  - Se desactiva el botón de registro.  
+  - Se muestra advertencia: “Ingrese una descripción válida”.
 
-## Casos de Prueba
+**Fallo al registrar el gasto (error del servidor)**  
+- **Simulación**: El backend responde con error 500.  
+- **Resultado esperado**:  
+  - Se muestra mensaje: “No se pudo registrar el gasto. Intente más tarde”.  
+  - El formulario no se borra.
 
-En las pruebas existentes, podrás encontrar ejemplos de:
+**Error de red al notificar el pago**  
+- **Simulación**: Se corta la conexión antes de notificar el pago.  
+- **Resultado esperado**:  
+  - Se muestra alerta: “Error de red. Intente nuevamente”.  
+  - La notificación no se guarda hasta reintentar con éxito.
 
-- **Happy Path**: Pruebas que verifican el comportamiento correcto cuando todo funciona como se espera
-- **Unhappy Path**: Pruebas que verifican el comportamiento cuando hay situaciones inesperadas o errores
+---
 
-## Ejecución de Pruebas
+## 🧪 Cómo ejecutar las pruebas
 
-Para ejecutar las pruebas, utiliza el siguiente comando:
-
-```bash
-npm test
-```
-
-Para ejecutar las pruebas en modo observador (útil durante el desarrollo):
-
-```bash
-npm run test:watch
-```
-
-## Recursos Adicionales
-
-- [Jest Documentation](https://jestjs.io/docs/getting-started)
-- [React Testing Library Documentation](https://testing-library.com/docs/react-testing-library/intro/)
-- [Jest DOM Testing Library](https://github.com/testing-library/jest-dom)
+1. Clona el repositorio:  
+   ```bash
+   git clone https://github.com/TU-USUARIO/lab-04-test-frontend.git
+   cd lab-04-test-frontend
